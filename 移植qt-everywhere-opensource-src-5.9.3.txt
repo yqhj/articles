@@ -1,0 +1,188 @@
+
+将Y:\nexus_7252\rockford\目录中的所有文件，复制到：
+Y:\b-20g\qt-everywhere-opensource-src-5.9.3\qtbase\mkspecs\devices\linux-mipsel-broadcom-97252-g++\rockford\
+创建目录：
+Y:\b-20g\qt-everywhere-opensource-src-5.9.3\qtbase\mkspecs\devices\linux-mipsel-broadcom-97252-g++\rockford\middleware\v3d\driver\interface\khronos\lib
+在这个目录里放入：libv3ddriver.so，libnxpl.so，libnexus.so几个库文件。
+上面三个库文件的生成方法请参考：
+nexus_7252\nexus\docs\OpenGL_ES_QuickStart.pdf
+
+修改文件Y:\b-20g\qt-everywhere-opensource-src-5.9.3\qtbase\mkspecs\devices\linux-mipsel-broadcom-97252-g++\qmake.conf:
+QMAKE_INCDIR_OPENGL_ES2 = $${BRCM_ROCKFORD_PATH}/middleware/v3d/driver/interface/khronos/include/
+QMAKE_LIBDIR_OPENGL_ES2 = $${BRCM_ROCKFORD_PATH}/middleware/v3d/driver/interface/khronos/lib
+QMAKE_LIBS_OPENGL_ES2   = -lpthread -lv3ddriver -lrt -lnxpl
+
+如果要重新运行configure脚本修改Qt的配置，那么首先要删除config.cache这个文件：
+（You don't need to unpack it again, just delete the config.cache file）
+
+#cp /usr/lib/x86_64-linux-gnu/pkgconfig/fontconfig.pc /opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf/lib/pkgconfig/
+#cp /usr/lib/x86_64-linux-gnu/pkgconfig/dbus-1.pc /opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf/lib/pkgconfig/
+
+export PKG_CONFIG_LIBDIR=/opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf/lib/pkgconfig
+export PKG_CONFIG_SYSROOT_DIR=/
+
+./configure -prefix  /qt-5.9.3 -confirm-license -opensource -xplatform devices/linux-mipsel-broadcom-97252-g++ -no-openssl -nomake examples -nomake tools -nomake tests -device-option B_REFSW_DEBUG=n -device-option BRCM_ROCKFORD_PATH="$PWD"/qtbase/mkspecs/devices/linux-mipsel-broadcom-97252-g++/rockford -device-option BRCM_APPLIBS_PATH="$PWD"/qtbase/mkspecs/devices/linux-mipsel-broadcom-97252-g++/applibs -sysroot /opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf/sys-root
+
+make -j4
+如果上面的make -j4编译过程中报错，可以再次执行make，不使用-j4选项，那么错误可能就消失了。
+
+cd qtwebengine
+执行：
+/home/zw/b-20g/qt-everywhere-opensource-src-5.9.3/qtbase/bin/qmake -r
+出现错误：
+Unmet dependency: libpng
+QtWebEngine will not be built.
+解决方法：安装libpng，打开另外一个终端(这一步要放在编译Qt之前)：
+tar xf libpng-1.6.34.tar.xz 
+cd libpng-1.6.34/
+CC=arm-linux-gcc \
+CXX=arm-linux-g++ \
+./configure --prefix=/opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf \
+--build=i386-linux --host=arm-linux --target=arm-linux 
+make && make install
+
+然后再次执行：
+/home/zw/b-20g/qt-everywhere-opensource-src-5.9.3/qtbase/bin/qmake -r
+
+出现错误：
+ERROR at //BUILD.gn:74:1: Can't load input file.
+Project ERROR: GN build error!
+只要再次重复执行：
+/home/zw/b-20g/qt-everywhere-opensource-src-5.9.3/qtbase/bin/qmake -r
+问题就可消失。
+
+出现错误：
+../../3rdparty/chromium/dbus/message.h:8:23: fatal error: dbus/dbus.h: No such file or directory
+执行：
+mkdir -p qtwebengine/src/3rdparty/chromium/opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf/include/
+ln -s /opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf/include/dbus-1.0/ qtwebengine/src/3rdparty/chromium/opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf/include/dbus-1.0
+mkdir -p qtwebengine/src/3rdparty/chromium/opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf/lib
+ln -s /opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf/lib/dbus-1.0/ qtwebengine/src/3rdparty/chromium/opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf/lib/dbus-1.0
+
+出现错误：
+/opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf/include/ft2build.h:56:38: fatal error: freetype/config/ftheader.h: No such file or directory
+解决方法：
+ln -s /opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf/include/freetype2/  qtwebengine/src/3rdparty/chromium/opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf/include/freetype2
+
+
+vi ./qtwebengine/mkspecs/features/configure.prf
+#        skipBuild("pkg-config is required")
+#        return(false)
+
+-sysroot /opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf/sys-root -force-pkg-config
+
+/usr/lib/x86_64-linux-gnu/pkgconfig/
+PKG_CONFIG_LIBDIR
+PKG_CONFIG_SYSROOT_DIR
+
+
+#export PKG_CONFIG_LIBDIR=/usr/lib/x86_64-linux-gnu/pkgconfig/
+export PKG_CONFIG_SYSROOT_DIR=/opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf/sys-root
+
+sudo apt-get install libdbus-1-dev
+sudo apt-get install libegl1-mesa-dev
+
+交叉编译opengl(mesa)的依赖库libdrm-2.4.89：
+CC=arm-linux-gcc \
+CXX=arm-linux-g++ \
+./configure --prefix=/opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf \
+--build=i386-linux --host=arm-linux --target=arm-linux 
+make && make install
+
+交叉编译mesa-17.2.8:
+CC=arm-linux-gcc \
+CXX=arm-linux-g++ \
+./configure --prefix=$PWD/_install \
+--target=arm-linux --host=arm-linux
+
+make && make install  
+
+dbus:  http://dbus.freedesktop.org/releases/dbus/
+expat: http://sourceforge.net/projects/expat/
+
+如果出现错误：
+ImportError: No module named mako.template
+则执行：
+sudo apt-get install python-mako
+如果：
+fatal error: expat.h: No such file or directory
+那么下载expat，之后：
+tar xf expat-2.2.5.tar.bz2
+cd expat-2.2.5/
+CC=arm-linux-gcc \
+CXX=arm-linux-g++ \
+./configure --prefix=/opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf \
+--build=i386-linux --host=arm-linux --target=arm-linux 
+make && make install  
+
+交叉编译依赖库dbus：
+tar xf dbus-1.10.24.tar.gz 
+cd dbus-1.10.24/
+CC=arm-linux-gcc \
+CXX=arm-linux-g++ \
+./configure --prefix=/opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf \
+--build=i386-linux --host=arm-linux --target=arm-linux --disable-tests
+make && make install
+
+交叉编译依赖库fontconfig：
+下载：https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.11.94.tar.gz
+然后：
+tar xf fontconfig-2.11.94.tar.gz 
+cd fontconfig-2.11.94/
+./configure --prefix=/opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf \
+--build=i386-linux --host=arm-linux --target=arm-linux
+
+
+#error You must enable NEON instructions (e.g. -mfloat-abi=softfp -mfpu=neon) to use arm_neon.h
+解决方法：
+vi qtwebengine/src/3rdparty/chromium/third_party/opus/BUILD.gn
+在其中添加use_opus_rtcd = false，如下：
+use_opus_rtcd = current_cpu == "arm" && (is_win || is_android || is_linux)
+use_opus_rtcd = false
+
+解决NEON问题(这一步要放在前面操作吧？)，参考如下；
+diff -ur qtwebengine-opensource-src-5.9.0/src/core/config/linux.pri qtwebengine-opensource-src-5.9.0-no-neon/src/core/config/linux.pri
+--- qtwebengine-opensource-src-5.9.0/src/core/config/linux.pri	2017-05-19 06:22:04.000000000 +0200
++++ qtwebengine-opensource-src-5.9.0-no-neon/src/core/config/linux.pri	2017-06-08 00:55:22.257781563 +0200
+@@ -70,7 +70,9 @@
+             gn_args += arm_use_neon=false
+             # If the toolchain does not explicitly specify to use NEON instructions
+             # we use arm_neon_optional for ARMv7
+-            equals(MARMV, 7): gn_args += arm_optionally_use_neon=true
++            # Disable NEON entirely for now, if set in the specfile, e.g., to
++            # work around some build failure.
++            # equals(MARMV, 7): gn_args += arm_optionally_use_neon=true
+         }
+     }
+并将linux.pri文件中的
+arm_use_neon=true
+全都改为：
+arm_use_neon=false
+     
+     
+出现错误：
+../../3rdparty/chromium/ui/gfx/codec/jpeg_codec.cc:124:10: error: invalid conversion from ‘int’ to ‘boolean’ [-fpermissive]
+解决如下：
+vi qtwebengine/src/3rdparty/chromium/ui/gfx/BUILD.gn
+在其中修改cflags，添加cflags = [ "-fpermissive" ]：
+  # Linux.
+  if (is_linux) {
+    deps += [ "//build/linux:fontconfig" ]
+    cflags = [ "-fpermissive" ]
+  }
+
+出现错误：
+../../3rdparty/chromium/ui/gfx/codec/jpeg_codec.cc:363:10: error: cannot convert ‘bool’ to ‘boolean’ in return
+../../3rdparty/chromium/ui/gfx/codec/jpeg_codec.cc:491:36: error: cannot convert ‘bool’ to ‘boolean’ for argument ‘2’ to ‘int jpeg_read_header(j_decompress_ptr, boolean)’
+解决方法：
+vi qtwebengine/src/3rdparty/chromium/ui/gfx/codec/jpeg_codec.cc
+修改如下：
+boolean FillInputBuffer(j_decompress_ptr cinfo) {
+  return (boolean)false;
+}
+// fill the file metadata into our buffer
+if (jpeg_read_header(&cinfo, (boolean)true) != JPEG_HEADER_OK)
+return false;
+
+
+
