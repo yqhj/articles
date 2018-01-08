@@ -36,6 +36,20 @@ CXX=arm-linux-g++ \
 --build=i386-linux --host=arm-linux --target=arm-linux 
 make && make install  
 
+交叉编译依赖库openssl：
+下载地址：http://www.openssl.org/source/
+tar xf openssl-1.0.2n.tar.gz
+cd openssl-1.0.2n/
+export CC=arm-linux-gcc
+./config no-asm shared --prefix=/opt/toolchains/stbgcc-4.8-1.4/arm-linux-gnueabihf 
+make && make install  
+出现错误：
+arm-linux-gcc: error: unrecognized command line option '-m64'
+解决方法：
+vi Makefile，去掉其中的-m64
+然后重新执行make:
+make && make install  
+
 [1] 创建并修改配置文件：
 cd qtbase/mkspecs/devices/
 cp -rf linux-mipsel-broadcom-97425-g++/ linux-mipsel-broadcom-97252-g++/
