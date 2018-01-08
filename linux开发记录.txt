@@ -1,0 +1,4 @@
+[1] Linux下使用fdisk扩大分区容量:
+http://www.osyunwei.com/archives/9368.html
+
+[2]
