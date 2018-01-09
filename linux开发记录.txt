@@ -1,4 +1,8 @@
 [1] Linux下使用fdisk扩大分区容量:
 http://www.osyunwei.com/archives/9368.html
 
-[2]
+[2] 安装python模块，比如PyVISA ：
+首先安装pip：https://pip.pypa.io/en/latest/installing/
+然后安装模块，如：https://pypi.python.org/pypi/PyVISA
+
+[3] 

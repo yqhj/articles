@@ -1,0 +1,7 @@
+[1] 虚拟机中运行qt例子程序，出现错误：
+qt-everywhere-opensource-src-5.9.1-pc/qtwayland/examples/wayland/qwindow-compositor# ./qwindow-compositor 
+QtCompositor: Failed to initialize EGL display. Could not get EglDisplay for window.
+解决办法：
+export QT_XCB_GL_INTEGRATION=xcb_egl
+
+[2] 
