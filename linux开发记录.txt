@@ -5,4 +5,8 @@ http://www.osyunwei.com/archives/9368.html
 首先安装pip：https://pip.pypa.io/en/latest/installing/
 然后安装模块，如：https://pypi.python.org/pypi/PyVISA
 
-[3] 
+[3] Ubuntu 16.04 安装配置DHCP服务
+http://blog.topspeedsnail.com/archives/5924
+
+[4] 
+
