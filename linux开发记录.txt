@@ -8,5 +8,41 @@ http://www.osyunwei.com/archives/9368.html
 [3] Ubuntu 16.04 安装配置DHCP服务
 http://blog.topspeedsnail.com/archives/5924
 
-[4] 
+[4] configure程序时报错：
+./configure: line 5045: syntax error near unexpected token `MINIGUI,'
+./configure: line 5045: `PKG_CHECK_MODULES(MINIGUI, minigui >= 2.0.4)'
+解决方法：
+sudo apt-get install pkg-config
+之后查看配置路径：
+aclocal --print-ac-dir
+/usr/local/share/aclocal
+然后：
+sudo cp /usr/share/aclocal/pkg.m4 /usr/local/share/aclocal/
+如果还是不行，那么修改configure.in，屏蔽掉：
+PKG_CHECK_MODULES([MINIGUI], [minigui >= 2.0.4])
+
+[6] Ubuntu-16.04任务栏不能显示eclipse图标问题：
+用inkscape软件将eclipse目录下的icon.xpm转换成icon.svg；
+然后：sudo cp ~/eclipse/icon.svg /usr/share/icons/hicolor/scalable/apps/eclipse.svg
+之后建立如下eclipse.desktop文件：
+cat /usr/share/applications/eclipse.desktop 
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Eclipse
+GenericName=Eclipse Editor
+Comment=Eclipse software
+Exec=/usr/bin/eclipse -vm /home/zw/jdk1.8.0_151/bin/
+Icon=eclipse
+Terminal=false
+Categories=Application;Development
+X-GNOME-Bugzilla-Bugzilla=GNOME
+X-GNOME-Bugzilla-Product=Eclipse
+X-GNOME-Bugzilla-Component=General
+X-GNOME-Bugzilla-Version=1.0
+X-GNOME-Bugzilla-OtherBinaries=eclipse
+StartupNotify=true
+
+[7]Adblock Plus for Google Chrome下载地址：
+https://downloads.adblockplus.org/devbuilds/adblockpluschrome/
 
