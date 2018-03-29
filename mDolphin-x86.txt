@@ -21,6 +21,11 @@ libJavaScriptCore_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
         -licuuc \
         $(LDFLAGS) -o $@
 
+使mDolphin和MiniGUI都使用libjpeg.so.7.0.0：
+cd /usr/lib/i386-linux-gnu/
+sudo rm libjpeg.so
+sudo ln -s /usr/local/lib/libjpeg.so.7.0.0 libjpeg.so
+
 然后编译：
 make
 

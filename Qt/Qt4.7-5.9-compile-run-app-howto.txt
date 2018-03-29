@@ -1,0 +1,79 @@
+[1] Qt-4.7.3 
+./configure -embedded armv7 -xplatform qws/linux-arm-gnueabi-g++ -little-endian -opensource -host-little-endian -confirm-license -nomake demos -nomake examples -qt-gfx-vnc
+
+[2] Qt-5.9.1 交叉编译：
+cd qtbase/mkspecs/devices/
+cp -rf linux-mipsel-broadcom-97425-g++/ linux-mipsel-broadcom-97252-g++/
+修改其中的qmake.conf ：
+	diff linux-mipsel-broadcom-97425-g++/qmake.conf  linux-mipsel-broadcom-97252-g++/qmake.conf 
+	2c2
+	< # qmake configuration for linux-mipsel-broadcom-97425-g++
+	---
+	> # qmake configuration for linux-mipsel-broadcom-97252-g++
+	26c26,27
+	< CROSS_COMPILE           = mipsel-linux-
+	---
+	> #CROSS_COMPILE           = mipsel-linux-
+	> CROSS_COMPILE           = arm-linux-
+	42c43
+	< BRCM_PLATFORM           = 97425
+	---
+	> BRCM_PLATFORM           = 97252
+	61c62
+	< DIRECTFB_PLATFORM_HOOKS_SOURCES = $$PWD/qdirectfbeglhooks_bcm97425.cpp
+	---
+	> DIRECTFB_PLATFORM_HOOKS_SOURCES = $$PWD/qdirectfbeglhooks_bcm97252.cpp
+创建目录：
+mkdir qtbase/mkspecs/devices/linux-mipsel-broadcom-97252-g++/rockford
+mkdir qtbase/mkspecs/devices/linux-mipsel-broadcom-97252-g++/applibs
+然后：
+./configure -prefix  /home/zw/b-20g/qt_install/qt_5.9.1_7200plus -confirm-license -opensource -xplatform devices/linux-mipsel-broadcom-97252-g++ -no-openssl  -no-opengl -nomake examples -nomake tools -nomake tests -device-option B_REFSW_DEBUG=n -device-option BRCM_ROCKFORD_PATH="$PWD"/qtbase/mkspecs/devices/linux-mipsel-broadcom-97252-g++/rockford -device-option BRCM_APPLIBS_PATH="$PWD"/qtbase/mkspecs/devices/linux-mipsel-broadcom-97252-g++/applibs
+
+[3] 在嵌入式平台上搭建Qt5.9运行环境，并运行Qt程序：
+注意：下面的操作都是在/usr/data/目录下执行的。
+将Qt相关库文件复制到目标平台：
+cp libQt5* /usr/app/lib/
+包括：
+libQt5Core.so.5 libQt5Gui.so.5 libQt5Widgets.so.5 libQt5DBus.so.5 libQt5Network.so.5
+设置库文件搜索路径：
+export LD_LIBRARY_PATH=/usr/app/lib/
+将平台插件目录复制到开发板，也就是将：
+/home/zw/b-20g/qt_install/qt_5.9.1_7200plus/plugins/platforms/
+这个文件夹复制到：
+/usr/data/platforms/
+设置字体文件目录：
+export QT_QPA_FONTDIR=/usr/local/lib/minigui/res/font/
+设置输入设备：
+export QT_QPA_EVDEV_KEYBOARD_PARAMETERS=/dev/input/event0
+export QT_QPA_EVDEV_MOUSE_PARAMETERS=/dev/input/mouse0
+运行Qt程序：
+./lineedits -platform vnc
+这时可以在PC上使用VNC Viewer等软件连到目标平台，查看运行效果。例如连接下面的平台地址：
+192.168.63.70:5900
+在搭建Qt环境过程中如果遇到问题，可以借助strace命令来排查：
+./strace ./lineedits -platform vnc
+
+[4] Qt-5.9.1 编译Ubuntu版本（在Ubuntu16.04虚拟机中）：
+./configure -prefix /home/zw/b-20g/qt_install/qt_5.9.1_pc -confirm-license -opensource -nomake tests -nomake examples -no-opengl
+如果这样：
+./configure -prefix /home/zw/b-20g/qt_install/qt_5.9.1_pc -confirm-license -opensource -nomake tests -nomake examples
+会出现错误：ERROR: The OpenGL functionality tests failed!
+可以安装相关程序：
+sudo apt-get install libgl1-mesa-dev libglu1-mesa-dev
+然后重新解压qt源码包，再次configure；或许可以解决这个问题。
+
+[5] 在虚拟机编译并运行Qt实例程序：
+将qmake等工具加到环境变量PATH：
+export PATH=/home/zw/b-20g/qt_install/qt_5.9.1_pc/bin:$PATH
+安装字体文件：
+ln -s /usr/share/fonts/truetype/freefont/ /home/zw/b-20g/qt_install/qt_5.9.1_pc/lib/fonts
+编译实例程序：
+cd qtbase/examples/widgets/widgets/lineedits
+qmake
+make
+运行程序：
+./lineedits -platform vnc
+首先要安装vncviewer：
+sudo apt-get install vncviewer
+然后另外开启一个终端，查看并控制程序运行：
+vncviewer 127.0.0.1:5900
