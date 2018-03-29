@@ -1,6 +1,5 @@
 
 export PATH=$PATH:/home/zw/b-20g/omap138-gcc-6.2.1/bin
-
 mkdir /home/zw/b-20g/omap138-gcc-6.2.1/arm-linux-gnueabi/libc/lib/pkgconfig
 
 export PKG_CONFIG_LIBDIR=/home/zw/b-20g/omap138-gcc-6.2.1/arm-linux-gnueabi/libc/lib/pkgconfig
@@ -10,12 +9,9 @@ export PKG_CONFIG_SYSROOT_DIR=/
 -confirm-license -opensource \
 -xplatform linux-arm-gnueabi-g++ \
 -sysroot /home/zw/b-20g/omap138-gcc-6.2.1/arm-linux-gnueabi/libc \
--no-opengl -no-dbus \
+-no-opengl \
 -no-assimp -no-qt3d-profile-jobs -no-qt3d-profile-gl \
 -nomake examples -nomake tools -nomake tests
-
-
-
 
 
 
