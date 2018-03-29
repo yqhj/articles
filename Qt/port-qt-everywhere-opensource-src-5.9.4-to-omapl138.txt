@@ -1,14 +1,18 @@
 
 export PATH=$PATH:/home/zw/b-20g/omap138-gcc-6.2.1/bin
 
+mkdir /home/zw/b-20g/omap138-gcc-6.2.1/arm-linux-gnueabi/libc/lib/pkgconfig
+
+export PKG_CONFIG_LIBDIR=/home/zw/b-20g/omap138-gcc-6.2.1/arm-linux-gnueabi/libc/lib/pkgconfig
+export PKG_CONFIG_SYSROOT_DIR=/
 ./configure \
--prefix  /home/zw/b-20g/qt_install/qt_5.9.4_omap138 \
+-prefix  /qt-5.9.4 \
 -confirm-license -opensource \
 -xplatform linux-arm-gnueabi-g++ \
+-sysroot /home/zw/b-20g/omap138-gcc-6.2.1/arm-linux-gnueabi/libc \
 -no-opengl -no-dbus \
 -no-assimp -no-qt3d-profile-jobs -no-qt3d-profile-gl \
 -nomake examples -nomake tools -nomake tests
-
 
 
 
@@ -19,7 +23,7 @@ Configure summary:
 
 Building on: linux-g++ (x86_64, CPU features: mmx sse sse2)
 Building for: linux-arm-gnueabi-g++ (arm, CPU features: <none>)
-Configuration: cross_compile use_gold_linker compile_examples enable_new_dtags largefile precompile_header shared rpath release c++11 c++14 c++1z concurrent no-pkg-config reduce_exports stl
+Configuration: cross_compile use_gold_linker compile_examples enable_new_dtags largefile precompile_header shared rpath release c++11 c++14 c++1z concurrent reduce_exports stl
 Build options:
   Mode ................................... release
   Optimize release build for size ........ no
@@ -44,7 +48,7 @@ Qt modules and options:
   Qt Widgets ............................. yes
   Qt Xml ................................. yes
 Support enabled for:
-  Using pkg-config ....................... no
+  Using pkg-config ....................... yes
   QML debugging .......................... yes
   udev ................................... no
   Using system zlib ...................... no
@@ -207,7 +211,7 @@ Note: No wayland-egl support detected. Cross-toolkit compatibility disabled.
 
 Qt is now configured for building. Just run 'make'.
 Once everything is built, you must run 'make install'.
-Qt will be installed into '/home/zw/b-20g/qt-5.9.4-install-omap138'.
+Qt will be installed into '/home/zw/b-20g/omap138-gcc-6.2.1/arm-linux-gnueabi/libc/qt-5.9.4'.
 
 Prior to reconfiguration, make sure you remove any leftovers from
 the previous build.
