@@ -1,0 +1,25 @@
+port-qt-everywhere-opensource-src-4.8.7-to-omapl138
+(基于Ubuntu12.04虚拟机)
+
+tar xf qt-everywhere-opensource-src-4.8.7.tar.gz
+cd qt-everywhere-opensource-src-4.8.7
+
+vi mkspecs/qws/linux-arm-gnueabi-g++/qmake.conf
+将其中的
+arm-none-linux-gnueabi
+改为:
+arm-arago-linux-gnueabi
+
+mkdir -p /home/zw/f-20g/qt_install/qt_4.8.7_omap138
+配置qt：
+export PKG_CONFIG_PATH=/usr/local/dvsdk/linux-devkit/arm-arago-linux-gnueabi/usr/lib/pkgconfig
+export PKG_CONFIG_LIBDIR=$PKG_CONFIG_PATH
+export PKG_CONFIG_SYSROOT_DIR=/
+./configure \
+-opensource -confirm-license \
+-prefix /home/zw/f-20g/qt_install/qt_4.8.7_omap138 \
+-embedded arm -xplatform qws/linux-arm-gnueabi-g++ \
+-force-pkg-config \
+-nomake tools -nomake examples -nomake demos -nomake docs
+
+

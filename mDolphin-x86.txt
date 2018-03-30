@@ -51,38 +51,3 @@ mdolphin sample:
 vi Makefile
 CXXFLAGS = -g -O2  -Wall -Wno-strict-aliasing -pipe -lstdc++
 
--------------------------------------
-
-void BackendSaveDataFile()
-{
-	if(!Check_FileSaveData())
-		return;
-
-	char path[200];
-	char file_name[100];
-
-	snprintf(file_name, sizeof(file_name), "%s%s"
-			, GetCfgValue(save_file_name_cfg).c_str(), GetCfgValue(save_file_index_cfg).c_str());
-	SetCfgValue(SaveNameCfg, file_name);
-
-	FILE_DATA_TYPE type = CheckDataType();
-	const char * type_str = GetFileTypeExtStr(GetFileTypeNum(type));
-
-	int i = 0;
-	char append_str[100] = "";
-	do
-	{
-		snprintf(path, sizeof(path), "%s%s%s%s%s"
-				, GetUserSaveDataPath()
-				, GetCfgValue(SaveNameCfg).c_str()
-				, append_str
-				, type_str, CSV_EXT);
-
-		snprintf(append_str, sizeof(append_str), "-%d", ++i);
-	}
-	while(access(path, F_OK) == 0);
-
-	SaveDataFile(REPORT_DEVISER, path);
-
-	UpdateFileName();
-}
