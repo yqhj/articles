@@ -25,7 +25,7 @@ export PKG_CONFIG_SYSROOT_DIR=
 make -j4
 make install
 
-[2] 移植QupZilla-1.8.9：
+[2] 移植QupZilla-1.8.9
 cd QupZilla-1.8.9
 
 vi src/defines.pri
@@ -36,4 +36,27 @@ DEFINES *= DISABLE_DBUS
 export PKG_CONFIG_PATH=/home/zw/f-20g/qt_install/qt_4.8.7_omap138/lib/pkgconfig/
 /home/zw/f-20g/qt_install/qt_4.8.7_omap138/bin/qmake
 make
+
+[3]在目标平台上搭建QT运行环境，并运行实例程序
+将Qt相关库文件复制到目标平台的/usr/data/lib，包括：
+libQtCore.so.4     libQtGui.so.4      libQtNetwork.so.4  libQtScript.so.4   libQtSql.so.4      libQtWebKit.so.4   libQupZilla.so.1
+设置库文件搜索路径：
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/data/lib
+
+设置字体文件目录：
+export QT_QWS_FONTDIR=/usr/local/lib/minigui/res/font/
+
+运行实例程序：
+./moveblocks -qws
+
+[4]在目标平台上运行qupzilla
+将qt安装目录中的plugins文件夹复制到目标平台的/usr/data/，然后：
+export QT_PLUGIN_PATH=/usr/data/plugins
+./qupzilla -qws
+
+访问百度：
+./qupzilla -qws www.baidu.com
+
+添加对鼠标的支持：
+export QWS_MOUSE_PROTO=intelliMouse:/dev/mouse0
 
