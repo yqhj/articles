@@ -1,0 +1,25 @@
+编译voip相关库
+
+[1] 编译安装libosip2：
+tar xf libosip2-4.0.0.tar.gz
+cd libosip2-4.0.0/
+CC=arm-arago-linux-gnueabi-gcc ./configure --host=arm-arago-linux-gnueabi --prefix=/usr/local/dvsdk/linux-devkit/arm-arago-linux-gnueabi/usr  --disable-trace --disable-debug
+make
+make install
+
+[2] 编译安装libeXosip2：
+tar xf libeXosip2-4.0.0.tar.gz
+cd libeXosip2-4.0.0/
+CC=arm-arago-linux-gnueabi-gcc ./configure --host=arm-arago-linux-gnueabi --target=arm-arago-linux-gnueabi --prefix=/usr/local/dvsdk/linux-devkit/arm-arago-linux-gnueabi/usr
+编译之后会生成sip_reg可用于测试，例如：
+./sip_reg -r sip:192.168.63.5 -u sip:100@192.168.63.5 -c sip:101@192.168.63.5 -U 100 -P 123
+
+[3] 生成libPhoneSip.a：
+cd modules/libvoip/sip-phone/
+arm-arago-linux-gnueabi-g++ -I../include -c PhoneSip.cpp RtpTransport.cpp -leXosip2 -losip2 -losipparser2 -lortp -lpthread -lresolv -lrt  
+arm-arago-linux-gnueabi-ar -cr libPhoneSip.a PhoneSip.o RtpTransport.o
+
+[4] 生成libVoipParser.so：
+cd modules/libvoip/LibTs/
+make -f Makefile_voip
+
