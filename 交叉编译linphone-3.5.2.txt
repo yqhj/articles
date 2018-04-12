@@ -1,0 +1,72 @@
+交叉编译linphone-3.5.2:
+创建目录linphone-3.5.2-all，将相关库放在里面；
+cd linphone-3.5.2-all/
+mkdir targetfs
+export LP_INSTALL_DIR=/home/zw/f-20g/linphone-3.5.2-all/targetfs
+
+编译libogg：
+tar xf libogg-1.3.0.tar.xz
+cd libogg-1.3.0/
+./configure --prefix=$LP_INSTALL_DIR  CC=arm-arago-linux-gnueabi-gcc --host=arm-arago-linux-gnueabi
+make
+make install
+
+编译speex：
+cd ..
+tar xf speex-1.2rc1.tar.gz
+cd speex-1.2rc1/
+./configure --prefix=$LP_INSTALL_DIR  CC=arm-arago-linux-gnueabi-gcc --host=arm-arago-linux-gnueabi --with-ogg=$LP_INSTALL_DIR
+make
+make instal
+
+编译libosip2：
+cd ..
+tar xf libosip2-3.5.0.tar.gz
+cd libosip2-3.5.0/
+./configure --prefix=$LP_INSTALL_DIR  CC=arm-arago-linux-gnueabi-gcc --host=arm-arago-linux-gnueabi
+make
+make install
+
+编译libeXosip2：
+cd ..
+tar xf libeXosip2-3.5.0.tar.gz
+cd libeXosip2-3.5.0/
+./configure --prefix=$LP_INSTALL_DIR  CC=arm-arago-linux-gnueabi-gcc --host=arm-arago-linux-gnueabi PKG_CONFIG_PATH=$LP_INSTALL_DIR/lib/pkgconfig/
+make
+make install
+
+编译readline：
+cd ..
+tar xf readline-6.2.tar.gz
+cd readline-6.2/
+./configure --prefix=$LP_INSTALL_DIR  CC=arm-arago-linux-gnueabi-gcc --host=arm-arago-linux-gnueabi
+make
+make install
+
+编译linphone：
+cd ..
+tar xf linphone-3.5.2.tar.gz
+cd linphone-3.5.2/
+配置：
+./configure --prefix=$LP_INSTALL_DIR  \
+CC=arm-arago-linux-gnueabi-gcc --host=arm-arago-linux-gnueabi \
+--with-gnu-ld --disable-static  --enable-ipv6 --disable-glib \
+--disable-video --disable-pulseaudio --disable-gtk_ui --disable-x11 \
+--with-osip=$LP_INSTALL_DIR \
+--with-speex=$LP_INSTALL_DIR \
+CFLAGS="-I${LP_INSTALL_DIR}/include"  \
+LDFLAGS="-L${LP_INSTALL_DIR}/lib" \
+SPEEX_CFLAGS="-I${LP_INSTALL_DIR}/include"  \
+SPEEX_LIBS="-L${LP_INSTALL_DIR}/lib -lspeex -lspeexdsp" \
+SPEEXDSP_CFLAGS="-I${LP_INSTALL_DIR}/include" \
+SPEEXDSP_LIBS="-L${LP_INSTALL_DIR}/lib -lspeex -lspeexdsp" \
+OSIP_CFLAGS="-I${LP_INSTALL_DIR}/include"  \
+OSIP_LIBS="-L${LP_INSTALL_DIR}/lib  -leXosip2 -losip2 -losipparser2" \
+READLINE_CFLAGS="-I${LP_INSTALL_DIR}/include" \
+READLINE_LIBS="-L${LP_INSTALL_DIR}/lib" \
+PKG_CONFIG_PATH=${LP_INSTALL_DIR}/lib/pkgconfig/ 
+编译：
+make
+make install
+
+
