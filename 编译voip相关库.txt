@@ -23,3 +23,44 @@ arm-arago-linux-gnueabi-ar -cr libPhoneSip.a PhoneSip.o RtpTransport.o
 cd modules/libvoip/LibTs/
 make -f Makefile_voip
 
+[5] 编译linphone
+创建文件夹linphone，并切换到该目录：
+cd linphone/
+将相关的安装包（比如mbedtls-2.8.0-apache.tgz）放到这个目录；
+在这个目录下创建安装目录：
+mkdir install
+编译mbedtls：
+tar xf mbedtls-2.8.0-apache.tgz
+cd mbedtls-2.8.0/
+CC=arm-arago-linux-gnueabi-gcc make no_test
+编译bctoolbox：
+cd ..
+tar xf bctoolbox-0.6.0.tar.gz
+cd bctoolbox-0.6.0/
+修改CMakeLists.txt，在project(bctoolbox)前面添加：
+SET(CMAKE_SYSTEM_NAME Linux)
+SET(CMAKE_C_COMPILER "arm-arago-linux-gnueabi-gcc")
+然后：
+cmake -DCMAKE_TOOLCHAIN_FILE=~/arm.cmake . -DCMAKE_INSTALL_PREFIX=`pwd`/../install \
+-DMBEDTLS_INCLUDE_DIRS=`pwd`/../mbedtls-2.8.0/include -DMBEDTLS_LIBRARIES=`pwd`/../mbedtls-2.8.0/library/libmbedtls.a \
+-DENABLE_STRICT=NO -DENABLE_TESTS=NO -DENABLE_TESTS_COMPONENT=NO
+make
+make install
+编译belle-sip：
+cd ..
+tar xf belle-sip-1.6.3.tar.gz
+cd belle-sip-1.6.3-0/
+apt-get install libantlr3c-dev antlr3
+cmake . -DCMAKE_INSTALL_PREFIX=`pwd`/../install -DCMAKE_PREFIX_PATH=`pwd`/../install
+
+tar xf linphone-3.12.0.tar.gz
+cd linphone-3.12.0/
+./autogen.sh 
+配置：
+./configure --prefix=`pwd`/_install --host=arm-arago-linux-gnueabi \
+--disable-static --disable-glib --enable-gnome_ui=no --disable-manual --disable-speex \
+--enable-gtk_ui=no --enable-video=no --enable-strict=no --enable-artsc=no \
+--enable-ipv6 --enable-alsa \
+PKG_CONFIG_PATH=/home/data/donghaitao/linphone/target/lib/pkgconfig
+编译：
+make
