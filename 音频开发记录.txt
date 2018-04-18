@@ -1,0 +1,16 @@
+音频开发记录
+[1] 使用ffmpeg转换音频格式
+首先从https://johnvansickle.com/ffmpeg/下载编译好的ffmpeg，然后解压并使用：
+tar xf ffmpeg-release-32bit-static.tar.xz 
+cd ffmpeg-3.4.2-32bit-static/
+查看支持的编解码类型：
+./ffmpeg -formats
+转换音频格式，举例（Kalimba.mp3为win7自带的示例音乐）：
+./ffmpeg -i Kalimba.mp3 -f g723_1 -ar 8000 -b:a 6300 -ac 1 g723.g723
+./ffmpeg -i Kalimba.mp3 -f mulaw -ar 8000 -b:a 64000 -ac 1 pcmu.mulaw
+
+[2] 音频流打包发送方法
+参考：
+https://datatracker.ietf.org/doc/rfc3551/?include_text=1
+
+
