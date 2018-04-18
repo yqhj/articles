@@ -1,0 +1,29 @@
+交叉编译gdb-7.9.1
+
+[1] 下载相关文件
+下载gdb的依赖库termcap-1.3.1.tar.gz，地址：ftp://ftp.gnu.org/gnu/termcap/
+下载http://ftp.gnu.org/gnu/gdb/gdb-7.9.1.tar.xz
+
+[2] 解压并编译：
+首先设置环境变量，添加工具链的路径：
+export PATH=/home/zw/f-20g/stbgcc-4.8-1.4/bin/:$PATH
+然后：
+tar xf gdb-7.9.1.tar.xz
+cd gdb-7.9.1/
+将termcap-1.3.1.tar.gz放到当前目录，然后：
+tar xf termcap-1.3.1.tar.gz
+cd termcap-1.3.1/
+./configure CC=arm-linux-gnueabihf-gcc --prefix="$PWD/../_install" --host=arm-linux-gnueabihf
+修改Makefile，将里面的gcc改成arm-linux-gnueabihf-gcc。
+之后make && make install
+切换到上级目录，并编译gdb：
+cd ..
+配置：
+./configure CC=arm-linux-gnueabihf-gcc --prefix="$PWD/_install" \
+--host=arm-linux-gnueabihf --target=arm-linux-gnueabihf \
+CFLAGS="-g -O2 -I$PWD/_install/include" LDFLAGS=-L$PWD/_install/lib
+编译并安装：
+make && make install
+查看生成的gdb程序：
+file  _install/bin/gdb
+_install/bin/gdb: ELF 32-bit LSB executable, ARM, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.16, not stripped
