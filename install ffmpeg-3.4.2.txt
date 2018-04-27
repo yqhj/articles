@@ -1,0 +1,40 @@
+安装ffmpeg-3.4.2
+
+为了生成ffplay，下载SDL2：http://libsdl.org/release/SDL2-2.0.8.tar.gz
+然后安装：
+tar xf SDL2-2.0.8.tar.gz
+cd SDL2-2.0.8/
+./configure
+make -j4 && sudo make install
+
+安装依赖库libogg：
+tar xf libogg-1.3.0.tar.xz
+cd libogg-1.3.0/
+./configure
+make -j4 && sudo make install
+
+安装speex：
+cd ..
+tar xf speex-1.2rc1.tar.gz
+cd speex-1.2rc1/
+./configure
+make -j4 && sudo make install
+
+tar xf ffmpeg-3.4.2.tar.bz2 
+cd ffmpeg-3.4.2
+configure时出错： 
+nasm/yasm not found or too old. Use --disable-x86asm for a crippled build.
+解决办法：
+1）下载：wget http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
+2）解压：tar xf yasm-1.3.0.tar.gz
+3）切换路径： cd yasm-1.3.0
+4）执行配置： ./configure
+5）编译：make
+6）安装：sudo make install
+
+
+再次配置并安装：
+./configure --enable-shared --enable-ffplay --enable-libspeex
+make -j4
+sudo make install
+
