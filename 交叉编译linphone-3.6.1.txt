@@ -17,7 +17,7 @@ tar xf speex-1.2rc1.tar.gz
 cd speex-1.2rc1/
 ./configure --prefix=$LP_INSTALL_DIR  CC=arm-arago-linux-gnueabi-gcc --host=arm-arago-linux-gnueabi --with-ogg=$LP_INSTALL_DIR
 make
-make instal
+make install
 
 编译ortp：
 cd ..
@@ -103,3 +103,6 @@ linphonecsh exit
 
 export LD_LIBRARY_PATH=/usr/local/lib/:/usr/lib:/usr/ds2800/lib/:/usr/data/lib
 export PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/data
+
+arm-arago-linux-gnueabi-gcc -o rtpsend rtpsend.c -lortp -L$LP_INSTALL_DIR/lib -I$LP_INSTALL_DIR/include
+
