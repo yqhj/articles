@@ -1,19 +1,19 @@
-°²×°ffmpeg-3.4.2
+å®‰è£…ffmpeg-3.4.2
 
-ÎªÁËÉú³Éffplay£¬ÏÂÔØSDL2£ºhttp://libsdl.org/release/SDL2-2.0.8.tar.gz
-È»ºó°²×°£º
+ä¸ºäº†ç”Ÿæˆffplayï¼Œä¸‹è½½SDL2ï¼šhttp://libsdl.org/release/SDL2-2.0.8.tar.gz
+ç„¶åå®‰è£…ï¼š
 tar xf SDL2-2.0.8.tar.gz
 cd SDL2-2.0.8/
 ./configure
 make -j4 && sudo make install
 
-°²×°ÒÀÀµ¿âlibogg£º
+å®‰è£…ä¾èµ–åº“liboggï¼š
 tar xf libogg-1.3.0.tar.xz
 cd libogg-1.3.0/
 ./configure
 make -j4 && sudo make install
 
-°²×°speex£º
+å®‰è£…speexï¼š
 cd ..
 tar xf speex-1.2rc1.tar.gz
 cd speex-1.2rc1/
@@ -22,18 +22,18 @@ make -j4 && sudo make install
 
 tar xf ffmpeg-3.4.2.tar.bz2 
 cd ffmpeg-3.4.2
-configureÊ±³ö´í£º 
+configureæ—¶å‡ºé”™ï¼š 
 nasm/yasm not found or too old. Use --disable-x86asm for a crippled build.
-½â¾ö°ì·¨£º
-1£©ÏÂÔØ£ºwget http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
-2£©½âÑ¹£ºtar xf yasm-1.3.0.tar.gz
-3£©ÇĞ»»Â·¾¶£º cd yasm-1.3.0
-4£©Ö´ĞĞÅäÖÃ£º ./configure
-5£©±àÒë£ºmake
-6£©°²×°£ºsudo make install
+è§£å†³åŠæ³•ï¼š
+1ï¼‰ä¸‹è½½ï¼šwget http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
+2ï¼‰è§£å‹ï¼štar xf yasm-1.3.0.tar.gz
+3ï¼‰åˆ‡æ¢è·¯å¾„ï¼š cd yasm-1.3.0
+4ï¼‰æ‰§è¡Œé…ç½®ï¼š ./configure
+5ï¼‰ç¼–è¯‘ï¼šmake
+6ï¼‰å®‰è£…ï¼šsudo make install
 
 
-ÔÙ´ÎÅäÖÃ²¢°²×°£º
+å†æ¬¡é…ç½®å¹¶å®‰è£…ï¼š
 ./configure --enable-shared --enable-ffplay --enable-libspeex
 make -j4
 sudo make install
